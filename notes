@@ -1,0 +1,4 @@
+sudo ln -s $HOME/bin/create-component /usr/local/bin/create-react-component
+sudo ln -s $HOME/bin/remove-component /usr/local/bin/remove-react-component
+
+export PATH=$PATH:$HOME/bin  

@@ -1,7 +1,7 @@
 #!/bin/bash
 
-source /home/christian/bin/functions.sh
-source /home/christian/bin/templates.sh
+source $HOME/bin/functions.sh
+source $HOME/bin/templates.sh
 
 # Config
 _VERBOSE=0

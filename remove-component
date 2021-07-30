@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source /home/christian/bin/functions.sh
+source $HOME/bin/functions.sh
 
 # Config
 index_extention="js"
