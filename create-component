@@ -1,0 +1,85 @@
+#!/bin/bash
+
+source /home/christian/bin/functions.sh
+source /home/christian/bin/templates.sh
+
+# Config
+_VERBOSE=0
+_STYLED_COMPONENTS=0
+
+component_extention="jsx"
+index_extention="js"
+style_extention="css"
+raw_component_name="$1"
+component_name="${1,,}"
+# Paths
+OUTPUT=$(pwd)"/src""/components"
+COMPONENTS_INDEX="$OUTPUT""/index.$index_extention"
+
+# Manage params
+while [[ $# -gt 0 ]]; do
+    key="$2"
+
+    case $key in
+    -e | --extension)
+        component_extention="$3"
+        style_extention="${4:-css}"
+        shift # past argument
+        shift # past value
+        ;;
+    -v | --verbose)
+        _VERBOSE=1
+        shift # past argument
+        shift # past value
+        ;;
+    -s | --styled)
+        _STYLED_COMPONENTS=1
+        shift # past argument
+        shift # past value
+        ;;
+    *)        # unknown option
+        shift # past argument
+        ;;
+    esac
+done
+
+if [[ $_STYLED_COMPONENTS -eq 1 ]]; then
+    style_extention="$index_extention"
+fi
+
+# Set paths
+component_folder=$OUTPUT"/$component_name"
+component="$component_folder""/$component_name.component.$component_extention"
+style="$component_folder""/$component_name.style.$style_extention"
+component_index="$component_folder""/index.$index_extention"
+
+# Test component Name
+checkComponentName $component_name
+
+# Test if output folder exists
+if [ ! -d "$OUTPUT" ]; then
+    mkdir $OUTPUT
+fi
+
+# Test if components index exists
+if [ ! -f "$COMPONENTS_INDEX" ]; then
+    [ $_VERBOSE -eq 1 ] && echo "No Components index file found. Creating..."
+    touch $COMPONENTS_INDEX
+    echo "// Don't edit manually
+
+export {
+}" >$COMPONENTS_INDEX
+
+fi
+
+# Test if component exists
+if [ -d "$component_folder" ]; then
+    echo "Component »$raw_component_name« already exists."
+    exit
+fi
+
+createComponent $component_name $component_folder $component $style $component_index $_STYLED_COMPONENTS $COMPONENTS_INDEX
+
+# End
+
+echo "Component successfully created."

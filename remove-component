@@ -1,0 +1,26 @@
+#!/bin/bash
+
+source /home/christian/bin/functions.sh
+
+# Config
+index_extention="js"
+component_name="${1,,}"
+# Paths
+OUTPUT=$(pwd)"/src""/components"
+COMPONENTS_INDEX="$OUTPUT""/index.$index_extention"
+
+# Set paths
+component_folder=$OUTPUT"/$component_name"
+
+# Test component Name
+checkComponentName $component_name
+
+# Test if components folder exists
+checkFolderExists $component_folder $component_name
+
+# Remove Component
+removeComponent $component_folder $component_name $COMPONENTS_INDEX
+
+# End
+
+echo "Component »${component_name^}« successfully removed."

@@ -1,0 +1,120 @@
+#!/bin/bash
+# Config
+component_extention="jsx"
+index_extention="js"
+style_extention="css"
+raw_component_name="$1"
+component_name="${1,,}"
+# Paths
+src_folder=$(pwd)"/src"
+components_folder=$src_folder"/components"
+components_index="$components_folder""/index.$index_extention"
+
+POSITIONAL=()
+while [[ $# -gt 0 ]]; do
+    key="$2"
+
+    case $key in
+    -e | --extension)
+        component_extention="$3"
+        style_extention="${4:-css}"
+        shift # past argument
+        shift # past value
+        ;;
+    *)                     # unknown option
+        POSITIONAL+=("$1") # save it in an array for later
+        shift              # past argument
+        ;;
+    esac
+done
+
+component_folder=$components_folder"/$component_name"
+component="$component_folder""/$component_name.component.$component_extention"
+style="$component_folder""/$component_name.style.$style_extention"
+component_index="$component_folder""/index.$index_extention"
+
+# Test
+# Empty Component Name
+if [ -z "$component_name" ]; then
+    echo "No Component name provided. [component_name, options]"
+    exit
+fi
+
+# Components folder exists
+if [ ! -d "$components_folder" ]; then
+    mkdir $components_folder
+fi
+
+if [ ! -f "$components_index" ]; then
+    echo "No Components index file found. Creating..."
+    touch $components_index
+    echo "// Don't edit manually
+
+export {
+}" >$components_index
+
+fi
+
+# Component exists
+if [ -d "$component_folder" ]; then
+    echo "Component »$raw_component_name« already exists."
+    exit
+fi
+
+# Create folders / files
+mkdir $component_folder
+touch $component
+touch $style
+touch $component_index
+
+# Component > Template text
+echo "import React from 'react'
+import \"."/$component_name.style.$style_extention"\"
+
+const ${component_name^} = (props) => {
+    return (
+        <div className=\"${component_name^}\">
+            <p>Content of $component_name</p>
+        </div>
+    )
+}
+
+export default ${component_name^}" >$component
+
+# Style > Template text
+echo ".${component_name^} {
+    /* Empty */
+}" >$style
+
+# Component Index > Template text
+echo "import ${component_name^} from \"./$component_name.component\";
+
+export default ${component_name^};" >$component_index
+
+# Add to components index file
+first_line=1
+while IFS= read -r line; do
+
+    if [[ $first_line == 1 ]]; then
+        x="${line}
+import ${component_name^} from \"./$component_name\";"
+    else
+
+        if [[ $line =~ "export" ]]; then
+            x="${x}
+${line}
+    ${component_name^},"
+        else
+            x="${x}
+${line}"
+        fi
+
+    fi
+
+    first_line=0
+done <"$components_index"
+
+echo "${x%%*( )}" >$components_index
+
+echo "Component successfully created."
+
