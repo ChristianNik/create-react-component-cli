@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# get last param echo "${@: -1}"
 source $HOME/bin/functions.sh
 source $HOME/bin/templates.sh
 
@@ -11,7 +12,8 @@ component_extention="jsx"
 index_extention="js"
 style_extention="css"
 raw_component_name="$1"
-component_name="${1,,}"
+component_name="$1" # ${1,,}
+component_lowercase=${1,,}
 # Paths
 OUTPUT=$(pwd)"/src""/components"
 COMPONENTS_INDEX="$OUTPUT""/index.$index_extention"
@@ -48,9 +50,9 @@ if [[ $_STYLED_COMPONENTS -eq 1 ]]; then
 fi
 
 # Set paths
-component_folder=$OUTPUT"/$component_name"
-component="$component_folder""/$component_name.component.$component_extention"
-style="$component_folder""/$component_name.style.$style_extention"
+component_folder=$OUTPUT"/$component_lowercase"
+component="$component_folder""/$component_lowercase.component.$component_extention"
+style="$component_folder""/$component_lowercase.style.$style_extention"
 component_index="$component_folder""/index.$index_extention"
 
 # Test component Name

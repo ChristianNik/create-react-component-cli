@@ -1,7 +1,7 @@
 function writeDefaultComponent() {
     # Component > Template text
     echo "import React from 'react'
-import \"."/$component_name.style.$style_extention"\"
+import \"."/$component_lowercase.style.$style_extention"\"
 
 const ${component_name^} = (props) => {
     return (
@@ -17,7 +17,7 @@ export default ${component_name^}" >$component
 function writeStyledComponent() {
     # Component > Template text
     echo "import React from 'react'
-import { Styled${component_name^} } from \"."/$component_name.style.$style_extention"\"
+import { Styled${component_name^} } from \"."/$component_lowercase.style.$style_extention"\"
 
 const ${component_name^} = (props) => {
     return (

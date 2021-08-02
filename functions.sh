@@ -10,7 +10,6 @@ function removeComponent {
     component_name=$2
     components_index=$3
     rm -rf $component_folder
-
     # remove entry from components index file
     sed -i "/import ${component_name^} from \".\/${component_name}\";/d" $components_index
     sed -i "/${component_name^},/d" $components_index
@@ -32,7 +31,7 @@ function addComponentToComponentsIndex {
 
         if [[ $_first_line == 1 ]]; then
             x="${line}
-import ${component_name^} from \"./$component_name\";"
+import ${component_name^} from \"./$component_lowercase\";"
         else
 
             if [[ $line =~ "export" ]]; then
@@ -82,7 +81,7 @@ function createComponent {
     fi
 
     # Component Index > Template text
-    echo "import ${component_name^} from \"./$component_name.component\";
+    echo "import ${component_name^} from \"./$component_lowercase.component\";
 
 export default ${component_name^};" >$component_index
 
