@@ -1,26 +1,34 @@
 #!/bin/bash
-echo "$1, $2, $3, $4"
+# Config
 
-source $HOME/bin/functions.sh
+# Params
+operation=$1
+type=$2
+name=$3
+options=$4
+
+source lib.sh
+source component.sh
 
 operation=$1
 type=$2
 name=$3
 
-checkComponentName $name
+echo ${1^} ${2^} »${3^}«
 
-case $operation in
-create)
-    echo "create operation"
-    shift # past argument
-    shift # past value
-    ;;
-remove)
-    echo "remove operation"
-    shift # past argument
-    shift # past value
-    ;;
-*)        # unknown option
-    shift # past argument
-    ;;
-esac
+# Component
+
+if [[ $type == "component" ]]; then
+
+    case $operation in
+    add)
+        component.add $name
+        ;;
+    remove)
+        component.remove $name
+        ;;
+    *) # unknown option
+        ;;
+    esac
+
+fi
